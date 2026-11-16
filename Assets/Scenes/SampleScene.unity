@@ -268,7 +268,7 @@ GameObject:
   - component: {fileID: 53981113}
   - component: {fileID: 53981114}
   m_Layer: 6
-  m_Name: SPrite
+  m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -502,7 +502,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.3, y: 1.3}
   m_EdgeRadius: 0
 --- !u!1 &412688869
 GameObject:
@@ -605,7 +605,7 @@ GameObject:
   m_Component:
   - component: {fileID: 431118984}
   - component: {fileID: 431118986}
-  - component: {fileID: 431118985}
+  - component: {fileID: 431118987}
   m_Layer: 6
   m_Name: RightWallCheck
   m_TagString: Untagged
@@ -628,23 +628,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1007589681}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &431118985
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 431118983}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2389aa7ab7b324439a61ae8f8750d85, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GroundCheck
-  IsTouching: 0
-  targetLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  collider: {fileID: 431118986}
 --- !u!61 &431118986
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -691,6 +674,28 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.13, y: 0.97}
   m_EdgeRadius: 0
+--- !u!114 &431118987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 431118983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72db11190a9f29b4a85ad0a0548066fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CollisionEvent
+  IsTouching: 0
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  OnTouching:
+    m_PersistentCalls:
+      m_Calls: []
+  OnLeaving:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &504911966
 GameObject:
   m_ObjectHideFlags: 0
@@ -934,9 +939,9 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 34
-  orthographic: 1
-  orthographic size: 7
+  field of view: 26
+  orthographic: 0
+  orthographic size: 5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -961,7 +966,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -30}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -980,7 +985,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   _target: {fileID: 1874107259}
-  _offset: {x: 0, y: 0, z: -20}
+  _offset: {x: 0, y: 0, z: -30}
   _smoothing: 3
 --- !u!1 &521032182
 GameObject:
@@ -1567,7 +1572,7 @@ GameObject:
   - component: {fileID: 679602291}
   - component: {fileID: 679602293}
   - component: {fileID: 679602294}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Chakram
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1689,7 +1694,6 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 1
-  collider: {fileID: 679602291}
 --- !u!1 &726726912
 GameObject:
   m_ObjectHideFlags: 0
@@ -2050,7 +2054,6 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 8
-  collider: {fileID: 1117712535}
 --- !u!61 &1117712535
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2288,7 +2291,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1391211068}
   - component: {fileID: 1391211070}
-  - component: {fileID: 1391211069}
+  - component: {fileID: 1391211071}
   m_Layer: 6
   m_Name: LeftWallCheck
   m_TagString: Untagged
@@ -2311,23 +2314,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1007589681}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1391211069
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1391211067}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2389aa7ab7b324439a61ae8f8750d85, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GroundCheck
-  IsTouching: 0
-  targetLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  collider: {fileID: 1391211070}
 --- !u!61 &1391211070
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2374,6 +2360,28 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.13, y: 0.97}
   m_EdgeRadius: 0
+--- !u!114 &1391211071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391211067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72db11190a9f29b4a85ad0a0548066fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CollisionEvent
+  IsTouching: 0
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  OnTouching:
+    m_PersistentCalls:
+      m_Calls: []
+  OnLeaving:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1414619850
 GameObject:
   m_ObjectHideFlags: 0
@@ -2660,7 +2668,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1642541248}
   - component: {fileID: 1642541249}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ChakramSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2928,7 +2936,6 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 8
-  collider: {fileID: 1693276405}
 --- !u!61 &1693276405
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3123,6 +3130,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1747882783}
   - component: {fileID: 1747882782}
+  - component: {fileID: 1747882784}
+  - component: {fileID: 1747882785}
   m_Layer: 6
   m_Name: "K\xF6ttZone"
   m_TagString: Untagged
@@ -3193,6 +3202,68 @@ Transform:
   - {fileID: 53981113}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1747882784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1747882780}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d653c7b82699a744a4765502ff4de20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  "OnK\xF6ttigKontaktEvent":
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1874107258}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 679602289}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  collider: {fileID: 1747882782}
+--- !u!114 &1747882785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1747882780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72db11190a9f29b4a85ad0a0548066fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CollisionEvent
+  IsTouching: 0
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  OnTouching:
+    m_PersistentCalls:
+      m_Calls: []
+  OnLeaving:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1758688031
 GameObject:
   m_ObjectHideFlags: 0
@@ -3433,21 +3504,21 @@ MonoBehaviour:
   hangTimeInSeconds: 0.05
   hangTimeGravity: -8
   roofSpeedSet: -1
+  CoyoteTime: 0.1
   dashSpeed: 26
   dashDuration: 0.2
   dashCooldown: 0.5
-  wallSlideSpeed: 2
+  wallSlideSpeed: 10
   wallJumpHeight: 16
   wallJumpSpeed: 18
   ChakramThrowSpeed: 700
   _rb: {fileID: 1874107261}
   _groundCheck: {fileID: 1117712534}
   _roofCheck: {fileID: 1693276404}
-  _leftWallCheck: {fileID: 1391211069}
-  _rightWallCheck: {fileID: 431118985}
+  _leftWallCheck: {fileID: 1391211071}
+  _rightWallCheck: {fileID: 431118987}
   _inputHandler: {fileID: 1874107262}
   chakram: {fileID: 679602293}
-  _isWallSliding: 0
   velocity: {x: 0, y: 0}
 --- !u!1 &1941532030
 GameObject:
