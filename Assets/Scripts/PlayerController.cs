@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float hangTimeInSeconds = 0.05f;
     [SerializeField] float hangTimeGravity = -4;
     [SerializeField] float roofSpeedSet = -1;
-    [SerializeField] float CoyoteTime = 0.1f;
+    [SerializeField] float coyoteTime = 0.1f;
 
     [Header("Dash")]
     [SerializeField] float dashSpeed = 27;
@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] ChakramController chakram;
 
     [Header("Debug stats")]
-    float _jumpBufferTime;
+    [SerializeField] float _jumpBufferTime;
     float _hangTimer;
     bool _hasJumped;
     Vector2 _dashDirection;
@@ -54,6 +54,7 @@ public class PlayerController : MonoBehaviour
     PlayerInput _input;
     bool _isDashing;
     bool _isWallSliding;
+    [SerializeField] float _coyoteTimer;
 
     //velocity
     public Vector2 velocity;
@@ -120,6 +121,7 @@ public class PlayerController : MonoBehaviour
         _jumpBufferTime = MathF.Max(_jumpBufferTime - Time.fixedDeltaTime, 0);
         _hangTimer = MathF.Max(_hangTimer - Time.fixedDeltaTime, 0);
         _dashCooldown = MathF.Max(_dashCooldown - Time.fixedDeltaTime, 0);
+        _coyoteTimer = MathF.Max(_coyoteTimer - Time.fixedDeltaTime, 0);
     }
 
     void HorizontalMovement()
@@ -133,6 +135,7 @@ public class PlayerController : MonoBehaviour
         _jumpBufferTime = 0;
         velocity.y = jumpForce;
         _hasJumped = true;
+        _coyoteTimer = 0;
     }
 
     void ExecuteWallJump()
@@ -152,6 +155,7 @@ public class PlayerController : MonoBehaviour
             velocity.y = 0;
             _hasJumped = false;
 
+            _coyoteTimer = coyoteTime;
             //jump if there is buffertime left
             if (_jumpBufferTime > 0)
             {
@@ -174,12 +178,16 @@ public class PlayerController : MonoBehaviour
         //airborne
         else
         {
+            //gör coyote time möjligt
+            if (_coyoteTimer > 0)
+            {
+                if (_jumpBufferTime > 0)
+                {
+                    ExecuteJump();
+                }
+            }
             if (_rb.linearVelocity.y > 0) //rising
             {
-                if (_groundCheck.IsTouching)
-                {
-                    velocity.y = 0;
-                }
                 //allows you to cut your jump short if you realease the jumpbutton
                 if (!_input.JumpHeld)
                 {
@@ -187,6 +195,7 @@ public class PlayerController : MonoBehaviour
                     //cuts the hangtime so that the player starts falling immedieatly
                     _hasJumped = false;
                 }
+
             }
             else  //the player is at the peak of its jump or is falling
             {
@@ -257,9 +266,15 @@ public class PlayerController : MonoBehaviour
     //this happens once when you touch the wall
     void OnTouchingWall()
     {
-        //moving down
-        if (velocity.y < 0 && _isDashing) velocity.y = wallSlideSpeed;
-        Debug.Log("touched wall");
+        //moving down and not dashing
+        if (velocity.y < 0 && !_isDashing)
+        {
+
+            //negates one tick of grtavity
+            velocity.y = wallSlideSpeed * Time.fixedDeltaTime;
+            Debug.Log("touched wall anbd slowed down");
+        }
+
     }
 
     void WallSlideCheck()
