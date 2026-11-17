@@ -19,7 +19,7 @@ public class ArrowController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // vector2 to degrees
+        // vector2 to degrees                                                      matte sloppet
         float angle = Mathf.Atan2(_input.AimDirection.y, _input.AimDirection.x) * Mathf.Rad2Deg;
 
         // make the angle into quaternion

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlayerController : MonoBehaviour
 {
@@ -30,6 +31,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float wallSlideSpeed = 20;
     [SerializeField] float wallJumpHeight = 20;
     [SerializeField] float wallJumpSpeed = 50;
+    [SerializeField] float wallGrabSpeedDecreaseMultiplier = 1;
 
 
     [Header("Chakram")]
@@ -58,6 +60,19 @@ public class PlayerController : MonoBehaviour
 
     //velocity
     public Vector2 velocity;
+
+    public bool IsDashing
+    {
+        get { return _isDashing; }
+        private set { _isDashing = value; }
+    }
+
+    [Header("Player Events")]
+    [SerializeField] UnityEvent OnJump;
+    [SerializeField] UnityEvent OnWallJump;
+    [SerializeField] UnityEvent OnDash;
+    [SerializeField] UnityEvent OnEndDash;
+    [SerializeField] UnityEvent OnThrow;
 
     void Start()
     {
@@ -109,6 +124,7 @@ public class PlayerController : MonoBehaviour
         {
             //Ska chakram kastet vara baserat på spelarens speed? 
             chakram.Throw(_input.AimDirection.normalized * ChakramThrowSpeed);
+            OnThrow.Invoke();
         }
     }
 
@@ -136,6 +152,7 @@ public class PlayerController : MonoBehaviour
         velocity.y = jumpForce;
         _hasJumped = true;
         _coyoteTimer = 0;
+        OnJump.Invoke();
     }
 
     void ExecuteWallJump()
@@ -145,6 +162,8 @@ public class PlayerController : MonoBehaviour
         _hasJumped = true;
         //launches you out of the wall
         velocity.x = wallJumpSpeed * -GetWallDirection().x;
+
+        OnWallJump.Invoke();
     }
 
     void VerticalSpeed()
@@ -195,7 +214,6 @@ public class PlayerController : MonoBehaviour
                     //cuts the hangtime so that the player starts falling immedieatly
                     _hasJumped = false;
                 }
-
             }
             else  //the player is at the peak of its jump or is falling
             {
@@ -204,12 +222,8 @@ public class PlayerController : MonoBehaviour
                     StartHangTime();
                 }
             }
-
             var actualGravity = _hangTimer <= 0 ? gravity : hangTimeGravity;
-            // float actualGravity;
-            // if (_isWallSliding) actualGravity = wallSlideSpeed;
-            // else if (_hangTimer > 0) actualGravity = hangTimeGravity;
-            // else actualGravity = gravity;
+
             velocity.y -= actualGravity * Time.fixedDeltaTime;
         }
 
@@ -237,6 +251,8 @@ public class PlayerController : MonoBehaviour
         _dashCooldown = dashCooldown + dashDuration;
         _hasJumped = false; //stänger av hangtime, kanske kan vara true
 
+        OnDash.Invoke();
+
         yield return new WaitForSeconds(dashDuration);
 
         //after dash
@@ -244,9 +260,10 @@ public class PlayerController : MonoBehaviour
         _isDashing = false;
 
         StartHangTime();
+        OnEndDash.Invoke();
     }
 
-    Vector2 GetWallDirection()
+    public Vector2 GetWallDirection()
     {
         //maybe fix edge case where to you collide with both colliders at the same time
         if (_leftWallCheck.IsTouching)
@@ -263,20 +280,6 @@ public class PlayerController : MonoBehaviour
         return Vector2.zero;
     }
 
-    //this happens once when you touch the wall
-    void OnTouchingWall()
-    {
-        //moving down and not dashing
-        if (velocity.y < 0 && !_isDashing)
-        {
-
-            //negates one tick of grtavity
-            velocity.y = wallSlideSpeed * Time.fixedDeltaTime;
-            Debug.Log("touched wall anbd slowed down");
-        }
-
-    }
-
     void WallSlideCheck()
     {
         //player is in the air and touching a wall
@@ -290,11 +293,26 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //this happens once when you touch the wall
+    void OnTouchingWall()
+    {
+        //moving down and not dashing
+        if (velocity.y < 0 && !_isDashing)
+        {
+            //negates one tick of grtavity times the multiplier
+            velocity.y = wallSlideSpeed * Time.fixedDeltaTime * wallGrabSpeedDecreaseMultiplier;
+
+            OnWallJump.Invoke();
+            Debug.Log("touched wall anbd slowed down");
+        }
+
+    }
 
     //this may only be called during fixedUpdate
     void ChangeVelocity()
     {
         _rb.linearVelocity = velocity;
     }
+
     #endregion
 }

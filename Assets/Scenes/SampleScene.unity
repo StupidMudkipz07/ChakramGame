@@ -3496,7 +3496,7 @@ MonoBehaviour:
   groundedMoveSpeed: 10
   groundedAcceleration: 400
   aerialMoveSpeed: 9
-  aerialAcceleration: 180
+  aerialAcceleration: 150
   gravity: 50
   jumpForce: 16
   minimalJumpForce: 6
@@ -3511,6 +3511,7 @@ MonoBehaviour:
   wallSlideSpeed: 5
   wallJumpHeight: 16
   wallJumpSpeed: 18
+  wallGrabSpeedDecreaseMultiplier: 1
   ChakramThrowSpeed: 700
   _rb: {fileID: 1874107261}
   _groundCheck: {fileID: 1117712534}
@@ -3522,6 +3523,45 @@ MonoBehaviour:
   _jumpBufferTime: 0
   _coyoteTimer: 0
   velocity: {x: 0, y: 0}
+  OnJump:
+    m_PersistentCalls:
+      m_Calls: []
+  OnWallJump:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDash:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1964326868}
+        m_TargetAssemblyTypeName: TestAnimator, Assembly-CSharp
+        m_MethodName: StartDash
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnEndDash:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1964326868}
+        m_TargetAssemblyTypeName: TestAnimator, Assembly-CSharp
+        m_MethodName: EndDash
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnThrow:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1941532030
 GameObject:
   m_ObjectHideFlags: 0
@@ -3671,6 +3711,7 @@ GameObject:
   - component: {fileID: 1964326867}
   - component: {fileID: 1964326866}
   - component: {fileID: 1964326865}
+  - component: {fileID: 1964326868}
   m_Layer: 0
   m_Name: Animation test
   m_TagString: Untagged
@@ -3749,15 +3790,15 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 4128627071016431437, guid: 6ac4ad5816a176644a7a2d0d1c8b1f26, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 12.54, y: 12.54}
+  m_Size: {x: 0.36, y: 0.36}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
 --- !u!4 &1964326867
 Transform:
@@ -3774,6 +3815,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1964326868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1964326864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c5b72a68944aaf44b5fb80a56163a7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  animator: {fileID: 1964326865}
+  player: {fileID: 1874107263}
 --- !u!1 &1964414303
 GameObject:
   m_ObjectHideFlags: 0
