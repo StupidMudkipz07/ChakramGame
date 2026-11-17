@@ -9,13 +9,21 @@ public class TestAnimator : MonoBehaviour
     [SerializeField] PlayerController player;
     //jag vill inte behöva coupla spelaren med andra objekt, kan man skicka med sådan data i unityevent?
 
-    bool isDashing = false;
 
+    public void Idle()
+    {
+         animator.SetTrigger("Idle");
+    }
 
+     public void Moving()
+    {
+         animator.SetTrigger("Run");
+    }
 
     public void StartDash()
     {
         //animator.SetBool("Dash", true);
+        animator.SetTrigger("Dash");
     }
 
     public void EndDash()
@@ -23,12 +31,23 @@ public class TestAnimator : MonoBehaviour
         //animator.SetBool("Dash", false);
     }
 
+    public void StartFall()
+    {
+        //animator.SetBool("Dash", true);
+        animator.SetTrigger("Falling");
+    }
+
+    public void StartRising()
+    {
+        //animator.SetBool("Dash", true);
+        animator.SetTrigger("Rising");
+    }
+
+
+
 
     void Update()
     {
-        animator.SetBool("Dash", player.IsDashing);
-
-        animator.SetFloat("ySpeed", player.velocity.y);
-        animator.SetInteger("xSpeed", (int)MathF.Round(Math.Abs(player.velocity.x)));
+        
     }
 }

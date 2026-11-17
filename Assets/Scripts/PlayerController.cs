@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Stats")]
+    [Header("Move")]
     [SerializeField] float groundedMoveSpeed = 10;
     [SerializeField] float groundedAcceleration = 400;
     [SerializeField] float aerialMoveSpeed = 9;
@@ -27,20 +27,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float dashCooldown = 0.56f;
 
     [Header("Wall")]
-
     [SerializeField] float wallSlideSpeed = 20;
     [SerializeField] float wallJumpHeight = 20;
     [SerializeField] float wallJumpSpeed = 50;
     [SerializeField] float wallGrabSpeedDecreaseMultiplier = 1;
-
 
     [Header("Chakram")]
     [SerializeField] float ChakramThrowSpeed;
 
     [Header("References")]
     [SerializeField] Rigidbody2D _rb;
-    [SerializeField] CollisionChecker _groundCheck;
-    [SerializeField] CollisionChecker _roofCheck;
+    [SerializeField] CollisionEvent _groundCheck;
+    [SerializeField] CollisionEvent _roofCheck;
     [SerializeField] CollisionEvent _leftWallCheck;
     [SerializeField] CollisionEvent _rightWallCheck;
 
@@ -55,29 +53,28 @@ public class PlayerController : MonoBehaviour
     float _dashCooldown;
     PlayerInput _input;
     bool _isDashing;
-    bool _isWallSliding;
+    [SerializeField] bool _isWallSliding;
     [SerializeField] float _coyoteTimer;
 
     //velocity
     public Vector2 velocity;
 
-    public bool IsDashing
-    {
-        get { return _isDashing; }
-        private set { _isDashing = value; }
-    }
-
     [Header("Player Events")]
-    [SerializeField] UnityEvent OnJump;
-    [SerializeField] UnityEvent OnWallJump;
-    [SerializeField] UnityEvent OnDash;
-    [SerializeField] UnityEvent OnEndDash;
-    [SerializeField] UnityEvent OnThrow;
+    [SerializeField] public UnityEvent OnJump;
+    [SerializeField] public UnityEvent OnWallJump;
+    [SerializeField] public UnityEvent OnDash;
+    [SerializeField] public UnityEvent OnEndDash;
+    [SerializeField] public UnityEvent OnThrow;
+    [SerializeField] public UnityEvent OnTouchingGround;
+    [SerializeField] public UnityEvent OnGrabbingWall;
+    [SerializeField] public UnityEvent OnBonkinghead;
 
     void Start()
     {
         _leftWallCheck.OnTouching.AddListener(OnTouchingWall);
         _rightWallCheck.OnTouching.AddListener(OnTouchingWall);
+        _groundCheck.OnTouching.AddListener(OnGroundTouch);
+        _roofCheck.OnTouching.AddListener(OnTouchingRoof);
     }
 
     // Capture input in the input update loop, physics may run less often. chatgpt ass comment
@@ -108,9 +105,7 @@ public class PlayerController : MonoBehaviour
         //isnt dashing
         if (!_isDashing)
         {
-            HorizontalMovement();
-            WallSlideCheck();
-            VerticalSpeed();
+            StateCheck();
         }
 
         ChangeVelocity();
@@ -132,18 +127,69 @@ public class PlayerController : MonoBehaviour
 
     #region Movement
 
-    void UpdateValues()
+    void Grounded()
     {
-        _jumpBufferTime = MathF.Max(_jumpBufferTime - Time.fixedDeltaTime, 0);
-        _hangTimer = MathF.Max(_hangTimer - Time.fixedDeltaTime, 0);
-        _dashCooldown = MathF.Max(_dashCooldown - Time.fixedDeltaTime, 0);
-        _coyoteTimer = MathF.Max(_coyoteTimer - Time.fixedDeltaTime, 0);
+        velocity.x = Mathf.MoveTowards(velocity.x, _input.Move.x * groundedMoveSpeed, groundedAcceleration * Time.fixedDeltaTime);
+        velocity.y = 0;
+        _coyoteTimer = coyoteTime;
+
+        JumpCheck();
     }
 
-    void HorizontalMovement()
+    void WallSlide()
     {
-        float speed = _groundCheck.IsTouching ? groundedMoveSpeed : aerialMoveSpeed;
-        velocity.x = Mathf.MoveTowards(velocity.x, _input.Move.x * speed, (_groundCheck.IsTouching ? groundedAcceleration : aerialAcceleration) * Time.fixedDeltaTime);
+        //Horiztonal velocity
+        velocity.x = Mathf.MoveTowards(velocity.x, _input.Move.x * aerialMoveSpeed, aerialAcceleration * Time.fixedDeltaTime);
+
+        WallSlideCheck();
+
+        //if the player is moving up normal gravity is applied, otherwise apply wallgravity
+        var actualGravity = velocity.y > 0 ? gravity : wallSlideSpeed;
+        velocity.y -= actualGravity * Time.fixedDeltaTime;
+
+        WallJumpCheck();
+    }
+
+    void Airborne()
+    {
+        velocity.x = Mathf.MoveTowards(velocity.x, _input.Move.x * aerialMoveSpeed, aerialAcceleration * Time.fixedDeltaTime);
+
+        WallSlideCheck();
+
+        //gör coyote time möjligt
+        if (_coyoteTimer > 0)
+        {
+            JumpCheck();
+        }
+        //rising
+        if (_rb.linearVelocity.y > 0)
+        {
+            //allows you to cut your jump short if you realease the jumpbutton
+            if (!_input.JumpHeld)
+            {
+                velocity.y = MathF.Min(minimalJumpForce, velocity.y);
+                //cuts the hangtime so that the player starts falling immedieatly
+                _hasJumped = false;
+            }
+        }
+        //the player is at the peak of its jump or is falling
+        else
+        {
+            if (_hasJumped)
+            {
+                StartHangTime();
+            }
+        }
+        var actualGravity = _hangTimer <= 0 ? gravity : hangTimeGravity;
+
+        velocity.y -= actualGravity * Time.fixedDeltaTime;
+    }
+
+    void OnGroundTouch()
+    {
+        _hasJumped = false;
+
+        OnTouchingGround.Invoke();
     }
 
     void ExecuteJump()
@@ -152,6 +198,7 @@ public class PlayerController : MonoBehaviour
         velocity.y = jumpForce;
         _hasJumped = true;
         _coyoteTimer = 0;
+
         OnJump.Invoke();
     }
 
@@ -166,71 +213,21 @@ public class PlayerController : MonoBehaviour
         OnWallJump.Invoke();
     }
 
-    void VerticalSpeed()
+    void JumpCheck()
     {
-        //grounded
-        if (_groundCheck.IsTouching)
+        //jump if there is buffertime left
+        if (_jumpBufferTime > 0)
         {
-            velocity.y = 0;
-            _hasJumped = false;
-
-            _coyoteTimer = coyoteTime;
-            //jump if there is buffertime left
-            if (_jumpBufferTime > 0)
-            {
-                ExecuteJump();
-            }
+            ExecuteJump();
         }
-        //wall Sliding
-        else if (_isWallSliding)
-        {
-            //if the player is moving up normal gravity is applied, otherwise apply wallgravity
-            var actualGravity = velocity.y > 0 ? gravity : wallSlideSpeed;
-            velocity.y -= actualGravity * Time.fixedDeltaTime;
+    }
 
-            //jump if there is buffertime left
-            if (_jumpBufferTime > 0)
-            {
-                ExecuteWallJump();
-            }
-        }
-        //airborne
-        else
+    void WallJumpCheck()
+    {
+        //jump if there is buffertime left
+        if (_jumpBufferTime > 0)
         {
-            //gör coyote time möjligt
-            if (_coyoteTimer > 0)
-            {
-                if (_jumpBufferTime > 0)
-                {
-                    ExecuteJump();
-                }
-            }
-            if (_rb.linearVelocity.y > 0) //rising
-            {
-                //allows you to cut your jump short if you realease the jumpbutton
-                if (!_input.JumpHeld)
-                {
-                    velocity.y = MathF.Min(minimalJumpForce, velocity.y);
-                    //cuts the hangtime so that the player starts falling immedieatly
-                    _hasJumped = false;
-                }
-            }
-            else  //the player is at the peak of its jump or is falling
-            {
-                if (_hasJumped)
-                {
-                    StartHangTime();
-                }
-            }
-            var actualGravity = _hangTimer <= 0 ? gravity : hangTimeGravity;
-
-            velocity.y -= actualGravity * Time.fixedDeltaTime;
-        }
-
-        //touching roof 
-        if (_roofCheck.IsTouching)
-        {
-            velocity.y = roofSpeedSet;
+            ExecuteWallJump();
         }
     }
 
@@ -241,6 +238,12 @@ public class PlayerController : MonoBehaviour
         _hasJumped = false;
     }
 
+    void OnTouchingRoof()
+    {
+        velocity.y = roofSpeedSet;
+        OnBonkinghead.Invoke();
+    }
+   
     IEnumerator Dash()
     {
         //before dash
@@ -263,7 +266,7 @@ public class PlayerController : MonoBehaviour
         OnEndDash.Invoke();
     }
 
-    public Vector2 GetWallDirection()
+    Vector2 GetWallDirection()
     {
         //maybe fix edge case where to you collide with both colliders at the same time
         if (_leftWallCheck.IsTouching)
@@ -283,7 +286,7 @@ public class PlayerController : MonoBehaviour
     void WallSlideCheck()
     {
         //player is in the air and touching a wall
-        if (GetWallDirection().x != 0 && !_groundCheck.IsTouching)
+        if (GetWallDirection().x != 0)
         {
             _isWallSliding = true;
         }
@@ -293,7 +296,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //this happens once when you touch the wall
     void OnTouchingWall()
     {
         //moving down and not dashing
@@ -302,16 +304,42 @@ public class PlayerController : MonoBehaviour
             //negates one tick of grtavity times the multiplier
             velocity.y = wallSlideSpeed * Time.fixedDeltaTime * wallGrabSpeedDecreaseMultiplier;
 
-            OnWallJump.Invoke();
-            Debug.Log("touched wall anbd slowed down");
+            OnGrabbingWall.Invoke();
+            Debug.Log("touched wall and slowed down");
         }
 
     }
 
-    //this may only be called during fixedUpdate
+    void StateCheck()
+    {
+        //grounded
+        if (_groundCheck.IsTouching)
+        {
+            Grounded();
+        }
+        //wall Sliding
+        else if (_isWallSliding)
+        {
+            WallSlide();
+        }
+        //airborne
+        else
+        {
+            Airborne();
+        }
+    }
+
     void ChangeVelocity()
     {
         _rb.linearVelocity = velocity;
+    }
+
+    void UpdateValues()
+    {
+        _jumpBufferTime = MathF.Max(_jumpBufferTime - Time.fixedDeltaTime, 0);
+        _hangTimer = MathF.Max(_hangTimer - Time.fixedDeltaTime, 0);
+        _dashCooldown = MathF.Max(_dashCooldown - Time.fixedDeltaTime, 0);
+        _coyoteTimer = MathF.Max(_coyoteTimer - Time.fixedDeltaTime, 0);
     }
 
     #endregion

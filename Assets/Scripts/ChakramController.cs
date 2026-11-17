@@ -3,7 +3,6 @@ using System.Collections;
 using System.Threading;
 using UnityEngine;
 
-
 public class ChakramController : MonoBehaviour
 {
 
@@ -40,7 +39,7 @@ public class ChakramController : MonoBehaviour
         IsConnectedToTarget = false;
 
         _rb.AddForce(throwDirection);
-        Debug.Log("kast");
+        //Debug.Log("kast");
 
         //start countdowns
         StartCoroutine(MakeCatchableAfterDelay());
@@ -66,8 +65,13 @@ public class ChakramController : MonoBehaviour
     }
 
     void FollowPlayer()
+    {                                                                                 // behåll z index                                                                                           
+        transform.position = new(FollowTarget.position.x, FollowTarget.position.y, transform.position.z);
+    }
+
+    public void Stop()
     {
-        transform.position = FollowTarget.position;
+        _startSlowdown = true;
     }
 
     void FixedUpdate()
@@ -77,7 +81,7 @@ public class ChakramController : MonoBehaviour
         {
             _rb.simulated = false;
             IsConnectedToTarget = true;
-            Debug.Log("nuddade SPelaren");
+            //Debug.Log("nuddade SPelaren");
         }
         //flying freely
         if (!IsConnectedToTarget)

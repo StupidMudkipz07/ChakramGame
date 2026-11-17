@@ -267,7 +267,7 @@ GameObject:
   m_Component:
   - component: {fileID: 53981113}
   - component: {fileID: 53981114}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -723,8 +723,8 @@ Transform:
   m_GameObject: {fileID: 504911966}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.46, y: -12.1799, z: 0}
-  m_LocalScale: {x: 23.018284, y: 1.3137542, z: 1}
+  m_LocalPosition: {x: 4.46, y: -12.1732, z: 0}
+  m_LocalScale: {x: 23.018284, y: 1.3270231, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 627002000}
@@ -1588,7 +1588,7 @@ Transform:
   m_GameObject: {fileID: 679602289}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.478, y: -0.517, z: 1}
+  m_LocalPosition: {x: -1.478, y: -0.517, z: -0.1}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2015,7 +2015,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1117712533}
   - component: {fileID: 1117712535}
-  - component: {fileID: 1117712534}
+  - component: {fileID: 1117712536}
   m_Layer: 6
   m_Name: GroundCheck
   m_TagString: Untagged
@@ -2038,22 +2038,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1007589681}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1117712534
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1117712532}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2389aa7ab7b324439a61ae8f8750d85, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GroundCheck
-  IsTouching: 0
-  targetLayer:
-    serializedVersion: 2
-    m_Bits: 8
 --- !u!61 &1117712535
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2100,6 +2084,28 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.94, y: 0.13194448}
   m_EdgeRadius: 0
+--- !u!114 &1117712536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1117712532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72db11190a9f29b4a85ad0a0548066fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CollisionEvent
+  IsTouching: 0
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  OnTouching:
+    m_PersistentCalls:
+      m_Calls: []
+  OnLeaving:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1325266806
 GameObject:
   m_ObjectHideFlags: 0
@@ -2111,7 +2117,7 @@ GameObject:
   - component: {fileID: 1325266807}
   - component: {fileID: 1325266809}
   - component: {fileID: 1325266808}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2520,6 +2526,148 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!1 &1530330951
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1530330952}
+  - component: {fileID: 1530330953}
+  - component: {fileID: 1530330954}
+  m_Layer: 6
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1530330952
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1530330951}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1874107259}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &1530330953
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1530330951}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &1530330954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1530330951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 831ccf894fd9bbb4f88772b67979591c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1 &1636867192
 GameObject:
   m_ObjectHideFlags: 0
@@ -2897,7 +3045,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1693276403}
   - component: {fileID: 1693276405}
-  - component: {fileID: 1693276404}
+  - component: {fileID: 1693276406}
   m_Layer: 6
   m_Name: RoofCheck
   m_TagString: Untagged
@@ -2920,22 +3068,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1007589681}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1693276404
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1693276402}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2389aa7ab7b324439a61ae8f8750d85, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GroundCheck
-  IsTouching: 0
-  targetLayer:
-    serializedVersion: 2
-    m_Bits: 8
 --- !u!61 &1693276405
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2982,6 +3114,28 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.94, y: 0.13194448}
   m_EdgeRadius: 0
+--- !u!114 &1693276406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1693276402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72db11190a9f29b4a85ad0a0548066fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CollisionEvent
+  IsTouching: 0
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  OnTouching:
+    m_PersistentCalls:
+      m_Calls: []
+  OnLeaving:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1742521198
 GameObject:
   m_ObjectHideFlags: 0
@@ -3130,9 +3284,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1747882783}
   - component: {fileID: 1747882782}
-  - component: {fileID: 1747882784}
   - component: {fileID: 1747882785}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: "K\xF6ttZone"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3202,46 +3355,6 @@ Transform:
   - {fileID: 53981113}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1747882784
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1747882780}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d653c7b82699a744a4765502ff4de20, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  "OnK\xF6ttigKontaktEvent":
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1874107258}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 679602289}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  collider: {fileID: 1747882782}
 --- !u!114 &1747882785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3260,7 +3373,19 @@ MonoBehaviour:
     m_Bits: 128
   OnTouching:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 679602293}
+        m_TargetAssemblyTypeName: ChakramController, Assembly-CSharp
+        m_MethodName: Stop
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnLeaving:
     m_PersistentCalls:
       m_Calls: []
@@ -3438,6 +3563,7 @@ Transform:
   - {fileID: 384488246}
   - {fileID: 412688870}
   - {fileID: 959895610}
+  - {fileID: 1530330952}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &1874107261
@@ -3514,21 +3640,46 @@ MonoBehaviour:
   wallGrabSpeedDecreaseMultiplier: 1
   ChakramThrowSpeed: 700
   _rb: {fileID: 1874107261}
-  _groundCheck: {fileID: 1117712534}
-  _roofCheck: {fileID: 1693276404}
+  _groundCheck: {fileID: 1117712536}
+  _roofCheck: {fileID: 1693276406}
   _leftWallCheck: {fileID: 1391211071}
   _rightWallCheck: {fileID: 431118987}
   _inputHandler: {fileID: 1874107262}
   chakram: {fileID: 679602293}
   _jumpBufferTime: 0
+  _isWallSliding: 0
   _coyoteTimer: 0
   velocity: {x: 0, y: 0}
   OnJump:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1964326868}
+        m_TargetAssemblyTypeName: TestAnimator, Assembly-CSharp
+        m_MethodName: StartRising
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnWallJump:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1964326868}
+        m_TargetAssemblyTypeName: TestAnimator, Assembly-CSharp
+        m_MethodName: StartRising
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnDash:
     m_PersistentCalls:
       m_Calls:
@@ -3549,7 +3700,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1964326868}
         m_TargetAssemblyTypeName: TestAnimator, Assembly-CSharp
-        m_MethodName: EndDash
+        m_MethodName: StartFall
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3562,6 +3713,39 @@ MonoBehaviour:
   OnThrow:
     m_PersistentCalls:
       m_Calls: []
+  OnTouchingGround:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1964326868}
+        m_TargetAssemblyTypeName: TestAnimator, Assembly-CSharp
+        m_MethodName: Idle
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnGrabbingWall:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBonkinghead:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1964326868}
+        m_TargetAssemblyTypeName: TestAnimator, Assembly-CSharp
+        m_MethodName: StartFall
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1941532030
 GameObject:
   m_ObjectHideFlags: 0
@@ -3729,7 +3913,7 @@ Animator:
   m_GameObject: {fileID: 1964326864}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: ee4161804c44a1942832a41e4e9f6d51, type: 2}
+  m_Controller: {fileID: 9100000, guid: 5d6d92573b116c5499b1608e0a80e39e, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
