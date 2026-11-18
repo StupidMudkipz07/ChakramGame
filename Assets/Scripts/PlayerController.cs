@@ -5,14 +5,12 @@ using UnityEngine.Events;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Move")]
-    [SerializeField] float groundedMoveSpeed = 10;
+    [Header("Move")] [SerializeField] float groundedMoveSpeed = 10;
     [SerializeField] float groundedAcceleration = 400;
     [SerializeField] float aerialMoveSpeed = 9;
     [SerializeField] float aerialAcceleration = 180;
 
-    [Header("Jump")]
-    [SerializeField] float gravity = 50;
+    [Header("Jump")] [SerializeField] float gravity = 50;
     [SerializeField] float jumpForce = 16;
     [SerializeField] float minimalJumpForce = 6;
     [SerializeField] float jumpBufferInSeconds = 0.19f;
@@ -21,22 +19,20 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float roofSpeedSet = -1;
     [SerializeField] float coyoteTime = 0.1f;
 
-    [Header("Dash")]
-    [SerializeField] float dashSpeed = 27;
+    [Header("Dash")] [SerializeField] float dashSpeed = 27;
     [SerializeField] float dashDuration = 0.2f;
     [SerializeField] float dashCooldown = 0.56f;
 
-    [Header("Wall")]
-    [SerializeField] float wallSlideSpeed = 20;
+    [Header("Wall")] [SerializeField] float wallSlideSpeed = 20;
     [SerializeField] float wallJumpHeight = 20;
     [SerializeField] float wallJumpSpeed = 50;
     [SerializeField] float wallGrabSpeedDecreaseMultiplier = 1;
 
-    [Header("Chakram")]
-    [SerializeField] float ChakramThrowSpeed;
+    [Header("Chakram")] [SerializeField] float ChakramThrowSpeed;
 
-    [Header("References")]
-    [SerializeField] Rigidbody2D _rb;
+    [Header("References")] [SerializeField]
+    Rigidbody2D _rb;
+
     [SerializeField] CollisionEvent _groundCheck;
     [SerializeField] CollisionEvent _roofCheck;
     [SerializeField] CollisionEvent _leftWallCheck;
@@ -45,22 +41,25 @@ public class PlayerController : MonoBehaviour
     [SerializeField] InputHandler _inputHandler;
     [SerializeField] ChakramController chakram;
 
-    [Header("Debug stats")]
-    [SerializeField] float _jumpBufferTime;
+    [Header("Debug stats")] [SerializeField]
+    float _jumpBufferTime;
+
     float _hangTimer;
     bool _hasJumped;
     Vector2 _dashDirection;
     float _dashCooldown;
-    PlayerInput _input;
+    [SerializeField] PlayerInput _input;
     bool _isDashing;
     [SerializeField] bool _isWallSliding;
     [SerializeField] float _coyoteTimer;
 
+    
     //velocity
     public Vector2 velocity;
 
-    [Header("Player Events")]
-    [SerializeField] public UnityEvent OnJump;
+    [Header("Player Events")] [SerializeField]
+    public UnityEvent OnJump;
+
     [SerializeField] public UnityEvent OnWallJump;
     [SerializeField] public UnityEvent OnDash;
     [SerializeField] public UnityEvent OnEndDash;
@@ -94,6 +93,7 @@ public class PlayerController : MonoBehaviour
                 StartCoroutine(Dash());
             }
         }
+
         CheckThrow();
     }
 
@@ -129,7 +129,8 @@ public class PlayerController : MonoBehaviour
 
     void Grounded()
     {
-        velocity.x = Mathf.MoveTowards(velocity.x, _input.Move.x * groundedMoveSpeed, groundedAcceleration * Time.fixedDeltaTime);
+        velocity.x = Mathf.MoveTowards(velocity.x, _input.Move.x * groundedMoveSpeed,
+            groundedAcceleration * Time.fixedDeltaTime);
         velocity.y = 0;
         _coyoteTimer = coyoteTime;
 
@@ -139,7 +140,8 @@ public class PlayerController : MonoBehaviour
     void WallSlide()
     {
         //Horiztonal velocity
-        velocity.x = Mathf.MoveTowards(velocity.x, _input.Move.x * aerialMoveSpeed, aerialAcceleration * Time.fixedDeltaTime);
+        velocity.x = Mathf.MoveTowards(velocity.x, _input.Move.x * aerialMoveSpeed,
+            aerialAcceleration * Time.fixedDeltaTime);
 
         WallSlideCheck();
 
@@ -152,7 +154,8 @@ public class PlayerController : MonoBehaviour
 
     void Airborne()
     {
-        velocity.x = Mathf.MoveTowards(velocity.x, _input.Move.x * aerialMoveSpeed, aerialAcceleration * Time.fixedDeltaTime);
+        velocity.x = Mathf.MoveTowards(velocity.x, _input.Move.x * aerialMoveSpeed,
+            aerialAcceleration * Time.fixedDeltaTime);
 
         WallSlideCheck();
 
@@ -161,6 +164,7 @@ public class PlayerController : MonoBehaviour
         {
             JumpCheck();
         }
+
         //rising
         if (_rb.linearVelocity.y > 0)
         {
@@ -180,6 +184,7 @@ public class PlayerController : MonoBehaviour
                 StartHangTime();
             }
         }
+
         var actualGravity = _hangTimer <= 0 ? gravity : hangTimeGravity;
 
         velocity.y -= actualGravity * Time.fixedDeltaTime;
@@ -243,7 +248,7 @@ public class PlayerController : MonoBehaviour
         velocity.y = roofSpeedSet;
         OnBonkinghead.Invoke();
     }
-   
+
     IEnumerator Dash()
     {
         //before dash
@@ -307,7 +312,6 @@ public class PlayerController : MonoBehaviour
             OnGrabbingWall.Invoke();
             Debug.Log("touched wall and slowed down");
         }
-
     }
 
     void StateCheck()

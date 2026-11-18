@@ -20,7 +20,7 @@ public class TestAnimator : MonoBehaviour
          animator.SetTrigger("Run");
     }
 
-    public void StartDash()
+    public void StartDash(float a )
     {
         //animator.SetBool("Dash", true);
         animator.SetTrigger("Dash");

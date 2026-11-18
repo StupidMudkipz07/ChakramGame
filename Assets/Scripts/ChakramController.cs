@@ -74,6 +74,12 @@ public class ChakramController : MonoBehaviour
         _startSlowdown = true;
     }
 
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        //Thread.Sleep(1000);
+       // other.GetComponent<ISloppigasteInterfaceable>(); vikitigt att komma ihåg
+    }
+
     void FixedUpdate()
     {
         //touched player
