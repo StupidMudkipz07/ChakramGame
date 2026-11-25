@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
     bool _isWallSliding;
     float _coyoteTimer;
     
-    [SerializeField] _isStunned = false;
+    [SerializeField] bool _isStunned = false;
     
     [SerializeField] Transform respawn;
 
@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour
 
     public void StunPlayer(Vector2 velocity, float stunTime)
     {
-        StartCoroutine(DuringStun(stunTime))
+        StartCoroutine(DuringStun(stunTime));	
     }
      
 
@@ -238,8 +238,12 @@ public class PlayerController : MonoBehaviour
         
         //applies gravity
         var actualGravity = _hangTimer <= 0 ? gravity : hangTimeGravity;
-        //velocity.y -= actualGravity * Time.fixedDeltaTime;
-        velocity.y = Math.Min((velocity.y - (actualGravity * Time.fixedDeltaTime),TerminalVelocity));
+        velocity.y -= actualGravity * Time.fixedDeltaTime;
+        if(velocity.y > -terminalVelocity)	
+		{
+			//velocity.y = -terminalVelocity;
+			//fixa terminal velslopity
+		}
     }
 
     void OnGroundTouch()

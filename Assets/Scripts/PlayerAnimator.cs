@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using Random = System.Random;
 
 public class PlayerAnimator : MonoBehaviour
 {
@@ -14,7 +13,6 @@ public class PlayerAnimator : MonoBehaviour
 
     void Start()
     {
-        
         
         
         player.AnimatorEventWalk.AddListener(StartWalk);
