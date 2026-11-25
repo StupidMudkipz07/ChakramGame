@@ -1,0 +1,2 @@
+---Scripts---
+TypeWriterScript: https://blog.febucci.com/2026/05/how-to-make-a-typewriter-effect-in-unity-with-textmeshpro/
