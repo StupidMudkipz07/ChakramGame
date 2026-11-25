@@ -4,6 +4,7 @@ using UnityEngine;
 public class TestAnimator : MonoBehaviour
 {
 
+    
     [SerializeField] Animator animator;
 
     [SerializeField] PlayerController player;

@@ -6,12 +6,14 @@ using UnityEngine.Events;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Move")][SerializeField] float groundedMoveSpeed = 10;
+    [Header("Move")]
+    [SerializeField] float groundedMoveSpeed = 10;
     [SerializeField] float groundedAcceleration = 400;
     [SerializeField] float aerialMoveSpeed = 9;
     [SerializeField] float aerialAcceleration = 180;
 
-    [Header("Jump")][SerializeField] float gravity = 50;
+    [Header("Jump")]
+    [SerializeField] float gravity = 50;
     [SerializeField] float jumpForce = 16;
     [SerializeField] float minimalJumpForce = 6;
     [SerializeField] float jumpBufferInSeconds = 0.19f;
@@ -19,6 +21,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float hangTimeGravity = -4;
     [SerializeField] float roofSpeedSet = -1;
     [SerializeField] float coyoteTime = 0.1f;
+    [SerializeField] float terminalVelocity = 50;
+    
 
     [Header("Dash")][SerializeField] float dashSpeed = 27;
     [SerializeField] float dashDuration = 0.2f;
@@ -44,17 +48,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField] ChakramController chakram;
 
     [Header("Debug stats")]
-    [SerializeField]
     float _jumpBufferTime;
-
     float _hangTimer;
     bool _hasJumped;
     Vector2 _dashDirection;
     float _dashCooldown;
     [SerializeField] PlayerInput _input;
     bool _isDashing;
-    [SerializeField] bool _isWallSliding;
-    [SerializeField] float _coyoteTimer;
+    bool _isWallSliding;
+    float _coyoteTimer;
+    
+    [SerializeField] _isStunned = false;
+    
     [SerializeField] Transform respawn;
 
     //velocity
@@ -65,16 +70,23 @@ public class PlayerController : MonoBehaviour
         transform.position = respawn.position;
     }
 
-    [Header("Player Events")]
-    [SerializeField] public UnityEvent OnJump;
-    [SerializeField] public UnityEvent OnWallJump;
-    [SerializeField] public UnityEvent OnDash;
-    [SerializeField] public UnityEvent OnEndDash;
-    [SerializeField] public UnityEvent OnThrow;
-    [SerializeField] public UnityEvent OnTouchingGround;
-    [SerializeField] public UnityEvent OnGrabbingWall;
-    [SerializeField] public UnityEvent OnBonkinghead;
+    public void StunPlayer(Vector2 velocity, float stunTime)
+    {
+        StartCoroutine(DuringStun(stunTime))
+    }
+     
 
+    [Header("Player Events")]
+     public UnityEvent OnJump;
+     public UnityEvent OnWallJump;
+     public UnityEvent OnDash;
+     public UnityEvent OnEndDash;
+     public UnityEvent OnThrow;
+     public UnityEvent OnTouchingGround;
+     public UnityEvent OnGrabbingWall;
+     public UnityEvent OnBonkinghead;
+     
+     [Header("Animator Events")]
     public UnityEvent AnimatorEventWalk;
     public UnityEvent AnimatorEventIdle;
     public UnityEvent AnimatorEventLookUp;
@@ -83,6 +95,8 @@ public class PlayerController : MonoBehaviour
     public UnityEvent AnimatorEventRising;
     public UnityEvent AnimatorEventFalling;
     public UnityEvent AnimatorEventWallSliding;
+    public UnityEvent AnimatorEventStun;
+    public UnityEvent AnimatorEventEndStun;
 
 
     void Start()
@@ -118,13 +132,11 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         UpdateValues();
-
-        //isnt dashing
-        if (!_isDashing)
+        
+        if (!_isDashing || !_isStunned)
         {
             StateCheck();
         }
-
         ChangeVelocity();
     }
 
@@ -226,7 +238,8 @@ public class PlayerController : MonoBehaviour
         
         //applies gravity
         var actualGravity = _hangTimer <= 0 ? gravity : hangTimeGravity;
-        velocity.y -= actualGravity * Time.fixedDeltaTime;
+        //velocity.y -= actualGravity * Time.fixedDeltaTime;
+        velocity.y = Math.Min((velocity.y - (actualGravity * Time.fixedDeltaTime),TerminalVelocity));
     }
 
     void OnGroundTouch()
@@ -308,6 +321,17 @@ public class PlayerController : MonoBehaviour
 
         StartHangTime();
         OnEndDash.Invoke();
+    }
+
+    IEnumerator DuringStun(float duration)
+    {
+        _isStunned = true;   
+        AnimatorEventStun.Invoke();
+        
+        yield return new WaitForSeconds(duration);
+        
+        AnimatorEventEndStun.Invoke();
+        _isStunned = false;
     }
 
     Vector2 GetWallDirection()
