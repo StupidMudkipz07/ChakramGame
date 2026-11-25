@@ -18,7 +18,7 @@ public class TypewriterEffect : MonoBehaviour
 
     void Start()
     {
-        ShowText("Test hiaiojfof <b>jooafjfiahf</b> ijoahhaf");
+        //
     }
 
     /// <summary>
