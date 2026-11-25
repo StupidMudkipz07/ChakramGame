@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float hangTimeGravity = -4;
     [SerializeField] float roofSpeedSet = -1;
     [SerializeField] float coyoteTime = 0.1f;
-    [SerializeField] float terminalVelocity = 50;
+    [SerializeField] float terminalVelocity = 27f;
 
     [Header("Dash")]
     [SerializeField] float dashSpeed = 27;
@@ -87,18 +87,17 @@ public class PlayerController : MonoBehaviour
     public UnityEvent OnTouchingGround;
     public UnityEvent OnGrabbingWall;
     public UnityEvent OnBonkinghead;
+    public UnityEvent OnStun;
+    public UnityEvent OnEndStun;
 
-    [Header("Animator Events")]
-    public UnityEvent AnimatorEventWalk;
-    public UnityEvent AnimatorEventIdle;
-    public UnityEvent AnimatorEventLookUp;
-    public UnityEvent AnimatorEventCrouch;
-    public UnityEvent AnimatorEventDash;
-    public UnityEvent AnimatorEventRising;
-    public UnityEvent AnimatorEventFalling;
-    public UnityEvent AnimatorEventWallSliding;
-    public UnityEvent AnimatorEventStun;
-    public UnityEvent AnimatorEventEndStun;
+    [Header("Continious Events")]
+    public UnityEvent ContiniousWalk;
+    public UnityEvent ContiniousIdle;
+    public UnityEvent ContiniousLookUp;
+    public UnityEvent ContiniousCrouch;
+    public UnityEvent ContinousRising;
+    public UnityEvent ContiniousFalling;
+    public UnityEvent ContiniousWallSlide;
 
     void Start()
     {
@@ -166,19 +165,19 @@ public class PlayerController : MonoBehaviour
 
         if (Math.Abs(_input.Move.x) > 0)
         {
-            AnimatorEventWalk.Invoke();
+            ContiniousWalk.Invoke();
         }
         else if (_input.Move.y > 0)
         {
-            AnimatorEventLookUp.Invoke();
+            ContiniousLookUp.Invoke();
         }
         else if (_input.Move.y < 0)
         {
-            AnimatorEventCrouch.Invoke();
+            ContiniousCrouch.Invoke();
         }
         else
         {
-            AnimatorEventIdle.Invoke();
+            ContiniousIdle.Invoke();
         }
 
         JumpCheck();
@@ -188,10 +187,9 @@ public class PlayerController : MonoBehaviour
     {
         //Horiztonal velocity
         velocity.x = Mathf.MoveTowards(velocity.x, _input.Move.x * aerialMoveSpeed, aerialAcceleration * Time.fixedDeltaTime);
+        ContiniousWallSlide.Invoke();
 
         WallSlideCheck();
-
-        AnimatorEventWallSliding.Invoke();
 
         //if the player is moving up normal gravity is applied, otherwise apply wallgravity
         var actualGravity = velocity.y > 0 ? gravity : wallSlideSpeed;
@@ -217,7 +215,7 @@ public class PlayerController : MonoBehaviour
         //rising state
         if (_rb.linearVelocity.y > 0)
         {
-            AnimatorEventRising.Invoke();
+            ContinousRising.Invoke();
             //allows you to cut your jump short if you realease the jumpbutton
             if (!_input.JumpHeld)
             {
@@ -231,7 +229,7 @@ public class PlayerController : MonoBehaviour
         //the player is at the peak of its jump or is falling
         else
         {
-            AnimatorEventFalling.Invoke();
+            ContiniousFalling.Invoke();
             if (_hasJumped)
             {
                 StartHangTime();
@@ -330,13 +328,13 @@ public class PlayerController : MonoBehaviour
     IEnumerator DuringStun(float duration)
     {
         _isStunned = true;
-        AnimatorEventStun.Invoke();
+        OnStun.Invoke();
 
         //calculate stun velocity
         velocity = stunVelocity;
         yield return new WaitForSeconds(duration);
 
-        AnimatorEventEndStun.Invoke();
+        OnEndStun.Invoke();
         _isStunned = false;
     }
 

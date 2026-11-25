@@ -13,31 +13,68 @@ public class PlayerAnimator : MonoBehaviour
 
     void Start()
     {
-        player.AnimatorEventWalk.AddListener(StartWalk);
-        player.AnimatorEventIdle.AddListener(StartIdle);
-        player.AnimatorEventLookUp.AddListener(StartLookUp);
+        player.ContiniousWalk.AddListener(StartWalk);
+        player.ContiniousIdle.AddListener(StartIdle);
+        player.ContiniousLookUp.AddListener(StartLookUp);
         player.OnJump.AddListener(OnPlayerJump);
+        player.ContiniousCrouch.AddListener(OnPlayerCrouch);
+        player.OnDash.AddListener(OnDash);
+        player.OnEndDash.AddListener(OnEndDash);
+        player.OnGrabbingWall.AddListener(OnWallSlide);
+        player.OnWallJump.AddListener(OnWallJump);
     }
 
     void StartWalk()
     {
         animator.SetBool("Walk", true);
         animator.SetBool("LookingUp", false);
+        animator.SetBool("Crouch", false);
     }
 
     void StartIdle()
     {
         animator.SetBool("Walk", false);
+        animator.SetBool("Crouch", false);
+        animator.SetBool("LookingUp", false);
     }
 
     void StartLookUp()
     {
         animator.SetBool("LookingUp", true);
+        animator.SetBool("Crouch", false);
     }
 
     void OnPlayerJump()
     {
         animator.SetBool("Walk", false);
+        animator.SetBool("Crouch", false);
+        animator.SetBool("LookingUp", false);
+    }
+
+    void OnPlayerCrouch()
+    {
+        animator.SetBool("Crouch", true);
+        animator.SetBool("LookingUp", false);
+    }
+
+    void OnDash()
+    {
+        animator.SetBool("Dash", true);
+    }
+
+    void OnEndDash()
+    {
+        animator.SetBool("Dash", false);
+    }
+
+    void OnWallSlide()
+    {
+        animator.SetBool("wallSlide", true);
+    }
+
+    void OnWallJump()
+    {
+        animator.SetBool("wallSlide", false);
     }
 
     void Update()

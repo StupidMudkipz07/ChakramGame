@@ -856,7 +856,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 412688869}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -4299,6 +4299,7 @@ MonoBehaviour:
   hangTimeGravity: -8
   roofSpeedSet: -1
   coyoteTime: 0.1
+  terminalVelocity: 26
   dashSpeed: 26
   dashDuration: 0.2
   dashCooldown: 0.5
@@ -4306,6 +4307,7 @@ MonoBehaviour:
   wallJumpHeight: 16
   wallJumpSpeed: 18
   wallGrabSpeedDecreaseMultiplier: 1
+  stunVelocity: {x: -10, y: 4}
   ChakramThrowSpeed: 700
   _rb: {fileID: 1874107261}
   _groundCheck: {fileID: 1117712536}
@@ -4314,7 +4316,6 @@ MonoBehaviour:
   _rightWallCheck: {fileID: 431118987}
   _inputHandler: {fileID: 1874107262}
   chakram: {fileID: 679602293}
-  _jumpBufferTime: 0
   _input:
     Move: {x: 0, y: 0}
     AimDirection: {x: 0, y: 0}
@@ -4323,8 +4324,8 @@ MonoBehaviour:
     JumpReleased: 0
     Throw: 0
     DashPressed: 0
-  _isWallSliding: 0
-  _coyoteTimer: 0
+  _isDashing: 0
+  _isStunned: 0
   respawn: {fileID: 1247801378}
   velocity: {x: 0, y: 0}
   OnJump:
@@ -4351,28 +4352,31 @@ MonoBehaviour:
   OnBonkinghead:
     m_PersistentCalls:
       m_Calls: []
-  AnimatorEventWalk:
+  OnStun:
     m_PersistentCalls:
       m_Calls: []
-  AnimatorEventIdle:
+  OnEndStun:
     m_PersistentCalls:
       m_Calls: []
-  AnimatorEventLookUp:
+  ContiniousWalk:
     m_PersistentCalls:
       m_Calls: []
-  AnimatorEventCrouch:
+  ContiniousIdle:
     m_PersistentCalls:
       m_Calls: []
-  AnimatorEventDash:
+  ContiniousLookUp:
     m_PersistentCalls:
       m_Calls: []
-  AnimatorEventRising:
+  ContiniousCrouch:
     m_PersistentCalls:
       m_Calls: []
-  AnimatorEventFalling:
+  ContinousRising:
     m_PersistentCalls:
       m_Calls: []
-  AnimatorEventWallSliding:
+  ContiniousFalling:
+    m_PersistentCalls:
+      m_Calls: []
+  ContiniousWallSlide:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &1941532030
@@ -4734,15 +4738,15 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 9089393271968083430, guid: 478b1c86d86007a4391c2d23aeae4a39, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.32, y: 0.32}
+  m_Size: {x: 0.15, y: 0.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
 --- !u!95 &1978256334
 Animator:
