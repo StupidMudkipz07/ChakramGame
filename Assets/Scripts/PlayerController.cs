@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -22,18 +21,22 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float roofSpeedSet = -1;
     [SerializeField] float coyoteTime = 0.1f;
     [SerializeField] float terminalVelocity = 50;
-    
 
-    [Header("Dash")][SerializeField] float dashSpeed = 27;
+    [Header("Dash")]
+    [SerializeField] float dashSpeed = 27;
     [SerializeField] float dashDuration = 0.2f;
     [SerializeField] float dashCooldown = 0.56f;
 
-    [Header("Wall")][SerializeField] float wallSlideSpeed = 20;
+    [Header("Wall")]
+    [SerializeField] float wallSlideSpeed = 20;
     [SerializeField] float wallJumpHeight = 20;
     [SerializeField] float wallJumpSpeed = 50;
     [SerializeField] float wallGrabSpeedDecreaseMultiplier = 1;
 
-    [Header("Chakram")][SerializeField] float ChakramThrowSpeed;
+    [SerializeField] Vector2 stunVelocity;
+
+    [Header("Chakram")]
+    [SerializeField] float ChakramThrowSpeed;
 
     [Header("References")]
     [SerializeField]
@@ -48,18 +51,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField] ChakramController chakram;
 
     [Header("Debug stats")]
+    float _facingDirection;
     float _jumpBufferTime;
     float _hangTimer;
     bool _hasJumped;
     Vector2 _dashDirection;
     float _dashCooldown;
     [SerializeField] PlayerInput _input;
-    bool _isDashing;
+    [SerializeField] bool _isDashing;
     bool _isWallSliding;
     float _coyoteTimer;
-    
     [SerializeField] bool _isStunned = false;
-    
+
     [SerializeField] Transform respawn;
 
     //velocity
@@ -70,23 +73,22 @@ public class PlayerController : MonoBehaviour
         transform.position = respawn.position;
     }
 
-    public void StunPlayer(Vector2 velocity, float stunTime)
+    public void StunPlayer(float stunTime)
     {
-        StartCoroutine(DuringStun(stunTime));	
+        StartCoroutine(DuringStun(stunTime));
     }
-     
 
     [Header("Player Events")]
-     public UnityEvent OnJump;
-     public UnityEvent OnWallJump;
-     public UnityEvent OnDash;
-     public UnityEvent OnEndDash;
-     public UnityEvent OnThrow;
-     public UnityEvent OnTouchingGround;
-     public UnityEvent OnGrabbingWall;
-     public UnityEvent OnBonkinghead;
-     
-     [Header("Animator Events")]
+    public UnityEvent OnJump;
+    public UnityEvent OnWallJump;
+    public UnityEvent OnDash;
+    public UnityEvent OnEndDash;
+    public UnityEvent OnThrow;
+    public UnityEvent OnTouchingGround;
+    public UnityEvent OnGrabbingWall;
+    public UnityEvent OnBonkinghead;
+
+    [Header("Animator Events")]
     public UnityEvent AnimatorEventWalk;
     public UnityEvent AnimatorEventIdle;
     public UnityEvent AnimatorEventLookUp;
@@ -97,7 +99,6 @@ public class PlayerController : MonoBehaviour
     public UnityEvent AnimatorEventWallSliding;
     public UnityEvent AnimatorEventStun;
     public UnityEvent AnimatorEventEndStun;
-
 
     void Start()
     {
@@ -132,8 +133,9 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         UpdateValues();
-        
-        if (!_isDashing || !_isStunned)
+
+        //player is actionable
+        if (!_isDashing && !_isStunned)
         {
             StateCheck();
         }
@@ -235,15 +237,13 @@ public class PlayerController : MonoBehaviour
                 StartHangTime();
             }
         }
-        
-        //applies gravity
-        var actualGravity = _hangTimer <= 0 ? gravity : hangTimeGravity;
-        velocity.y -= actualGravity * Time.fixedDeltaTime;
-        if(velocity.y > -terminalVelocity)	
-		{
-			//velocity.y = -terminalVelocity;
-			//fixa terminal velslopity
-		}
+
+        //applies gravity applies gravity if you havent reached the terminalvelocity
+        if (velocity.y > -terminalVelocity)
+        {
+            var actualGravity = _hangTimer <= 0 ? gravity : hangTimeGravity;
+            velocity.y -= actualGravity * Time.fixedDeltaTime;
+        }
     }
 
     void OnGroundTouch()
@@ -329,11 +329,13 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator DuringStun(float duration)
     {
-        _isStunned = true;   
+        _isStunned = true;
         AnimatorEventStun.Invoke();
-        
+
+        //calculate stun velocity
+        velocity = stunVelocity;
         yield return new WaitForSeconds(duration);
-        
+
         AnimatorEventEndStun.Invoke();
         _isStunned = false;
     }

@@ -8,22 +8,21 @@ public class PlayerAnimator : MonoBehaviour
 
     [SerializeField] PlayerController player;
     //jag vill inte behöva coupla spelaren med andra objekt, kan man skicka med sådan data i unityevent?
-    
+
     Vector2 lastPlayerVelocity = Vector2.zero;
 
     void Start()
     {
-        
-        
         player.AnimatorEventWalk.AddListener(StartWalk);
         player.AnimatorEventIdle.AddListener(StartIdle);
-        player.AnimatorEventRising.AddListener(StartRising);
+        player.AnimatorEventLookUp.AddListener(StartLookUp);
+        player.OnJump.AddListener(OnPlayerJump);
     }
 
     void StartWalk()
     {
         animator.SetBool("Walk", true);
-        animator.SetBool("LookUp", false);
+        animator.SetBool("LookingUp", false);
     }
 
     void StartIdle()
@@ -33,16 +32,16 @@ public class PlayerAnimator : MonoBehaviour
 
     void StartLookUp()
     {
-        animator.SetBool("LookUp", true);
+        animator.SetBool("LookingUp", true);
     }
-    
-    void StartRising()
+
+    void OnPlayerJump()
     {
-        animator.SetBool("Rising", true);
+        animator.SetBool("Walk", false);
     }
 
     void Update()
     {
-        
+        animator.SetInteger("yspeed", (int)player.velocity.y);
     }
 }
