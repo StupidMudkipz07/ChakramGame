@@ -12,15 +12,15 @@ public class TestAnimator : MonoBehaviour
 
     public void Idle()
     {
-         animator.SetTrigger("Idle");
+        animator.SetTrigger("Idle");
     }
 
-     public void Moving()
+    public void Moving()
     {
-         animator.SetTrigger("Run");
+        animator.SetTrigger("Run");
     }
 
-    public void StartDash(float a )
+    public void StartDash(float a)
     {
         //animator.SetBool("Dash", true);
         animator.SetTrigger("Dash");
@@ -43,11 +43,17 @@ public class TestAnimator : MonoBehaviour
         animator.SetTrigger("Rising");
     }
 
+    public void StartWallSliding()
+    {
+        //animator.SetBool("Dash", true);
+        animator.SetTrigger("Wall");
+    }
+
 
 
 
     void Update()
     {
-        
+
     }
 }

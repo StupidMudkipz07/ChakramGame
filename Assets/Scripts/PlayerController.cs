@@ -1,16 +1,17 @@
 using System;
 using System.Collections;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Move")] [SerializeField] float groundedMoveSpeed = 10;
+    [Header("Move")][SerializeField] float groundedMoveSpeed = 10;
     [SerializeField] float groundedAcceleration = 400;
     [SerializeField] float aerialMoveSpeed = 9;
     [SerializeField] float aerialAcceleration = 180;
 
-    [Header("Jump")] [SerializeField] float gravity = 50;
+    [Header("Jump")][SerializeField] float gravity = 50;
     [SerializeField] float jumpForce = 16;
     [SerializeField] float minimalJumpForce = 6;
     [SerializeField] float jumpBufferInSeconds = 0.19f;
@@ -19,18 +20,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float roofSpeedSet = -1;
     [SerializeField] float coyoteTime = 0.1f;
 
-    [Header("Dash")] [SerializeField] float dashSpeed = 27;
+    [Header("Dash")][SerializeField] float dashSpeed = 27;
     [SerializeField] float dashDuration = 0.2f;
     [SerializeField] float dashCooldown = 0.56f;
 
-    [Header("Wall")] [SerializeField] float wallSlideSpeed = 20;
+    [Header("Wall")][SerializeField] float wallSlideSpeed = 20;
     [SerializeField] float wallJumpHeight = 20;
     [SerializeField] float wallJumpSpeed = 50;
     [SerializeField] float wallGrabSpeedDecreaseMultiplier = 1;
 
-    [Header("Chakram")] [SerializeField] float ChakramThrowSpeed;
+    [Header("Chakram")][SerializeField] float ChakramThrowSpeed;
 
-    [Header("References")] [SerializeField]
+    [Header("References")]
+    [SerializeField]
     Rigidbody2D _rb;
 
     [SerializeField] CollisionEvent _groundCheck;
@@ -41,7 +43,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] InputHandler _inputHandler;
     [SerializeField] ChakramController chakram;
 
-    [Header("Debug stats")] [SerializeField]
+    [Header("Debug stats")]
+    [SerializeField]
     float _jumpBufferTime;
 
     float _hangTimer;
@@ -52,14 +55,18 @@ public class PlayerController : MonoBehaviour
     bool _isDashing;
     [SerializeField] bool _isWallSliding;
     [SerializeField] float _coyoteTimer;
+    [SerializeField] Transform respawn;
 
-    
     //velocity
     public Vector2 velocity;
 
-    [Header("Player Events")] [SerializeField]
-    public UnityEvent OnJump;
+    public void Kill()
+    {
+        transform.position = respawn.position;
+    }
 
+    [Header("Player Events")]
+    [SerializeField] public UnityEvent OnJump;
     [SerializeField] public UnityEvent OnWallJump;
     [SerializeField] public UnityEvent OnDash;
     [SerializeField] public UnityEvent OnEndDash;
@@ -67,6 +74,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public UnityEvent OnTouchingGround;
     [SerializeField] public UnityEvent OnGrabbingWall;
     [SerializeField] public UnityEvent OnBonkinghead;
+
+    public UnityEvent AnimatorEventWalk;
+    public UnityEvent AnimatorEventIdle;
+    public UnityEvent AnimatorEventLookUp;
+    public UnityEvent AnimatorEventCrouch;
+    public UnityEvent AnimatorEventDash;
+    public UnityEvent AnimatorEventRising;
+    public UnityEvent AnimatorEventFalling;
+    public UnityEvent AnimatorEventWallSliding;
+
 
     void Start()
     {
@@ -129,10 +146,26 @@ public class PlayerController : MonoBehaviour
 
     void Grounded()
     {
-        velocity.x = Mathf.MoveTowards(velocity.x, _input.Move.x * groundedMoveSpeed,
-            groundedAcceleration * Time.fixedDeltaTime);
+        velocity.x = Mathf.MoveTowards(velocity.x, _input.Move.x * groundedMoveSpeed, groundedAcceleration * Time.fixedDeltaTime);
         velocity.y = 0;
         _coyoteTimer = coyoteTime;
+
+        if (Math.Abs(_input.Move.x) > 0)
+        {
+            AnimatorEventWalk.Invoke();
+        }
+        else if (_input.Move.y > 0)
+        {
+            AnimatorEventLookUp.Invoke();
+        }
+        else if (_input.Move.y < 0)
+        {
+            AnimatorEventCrouch.Invoke();
+        }
+        else
+        {
+            AnimatorEventIdle.Invoke();
+        }
 
         JumpCheck();
     }
@@ -140,10 +173,11 @@ public class PlayerController : MonoBehaviour
     void WallSlide()
     {
         //Horiztonal velocity
-        velocity.x = Mathf.MoveTowards(velocity.x, _input.Move.x * aerialMoveSpeed,
-            aerialAcceleration * Time.fixedDeltaTime);
+        velocity.x = Mathf.MoveTowards(velocity.x, _input.Move.x * aerialMoveSpeed, aerialAcceleration * Time.fixedDeltaTime);
 
         WallSlideCheck();
+
+        AnimatorEventWallSliding.Invoke();
 
         //if the player is moving up normal gravity is applied, otherwise apply wallgravity
         var actualGravity = velocity.y > 0 ? gravity : wallSlideSpeed;
@@ -154,20 +188,22 @@ public class PlayerController : MonoBehaviour
 
     void Airborne()
     {
-        velocity.x = Mathf.MoveTowards(velocity.x, _input.Move.x * aerialMoveSpeed,
-            aerialAcceleration * Time.fixedDeltaTime);
-
-        WallSlideCheck();
-
-        //gör coyote time möjligt
-        if (_coyoteTimer > 0)
+        //for all airborne states
         {
-            JumpCheck();
+            velocity.x = Mathf.MoveTowards(velocity.x, _input.Move.x * aerialMoveSpeed, aerialAcceleration * Time.fixedDeltaTime);
+            WallSlideCheck();
+
+            //gör coyote time möjligt
+            if (_coyoteTimer > 0)
+            {
+                JumpCheck();
+            }
         }
 
-        //rising
+        //rising state
         if (_rb.linearVelocity.y > 0)
         {
+            AnimatorEventRising.Invoke();
             //allows you to cut your jump short if you realease the jumpbutton
             if (!_input.JumpHeld)
             {
@@ -175,18 +211,21 @@ public class PlayerController : MonoBehaviour
                 //cuts the hangtime so that the player starts falling immedieatly
                 _hasJumped = false;
             }
+
         }
+        //falling state
         //the player is at the peak of its jump or is falling
         else
         {
+            AnimatorEventFalling.Invoke();
             if (_hasJumped)
             {
                 StartHangTime();
             }
         }
-
+        
+        //applies gravity
         var actualGravity = _hangTimer <= 0 ? gravity : hangTimeGravity;
-
         velocity.y -= actualGravity * Time.fixedDeltaTime;
     }
 
