@@ -154,7 +154,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -2223.23}
+  m_AnchoredPosition: {x: 0, y: -3169}
   m_SizeDelta: {x: 1000, y: 5246.46}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &257091424
@@ -177,7 +177,16 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "K\xE4ra f\xF6rsamling.\n\n"
+  m_text: "B\xE4ste \xE4rkebiskop Schnell.\n\n\xC4n en g\xE5ng har <i>K\xE4ttaren</i>
+    st\xE4llt till det f\xF6r f\xF6rsamlingen i Tetostadt. \xC4ven i exil upph\xF6r
+    inte hans villol\xE4ror att pl\xE5ga oss.\n\nDen h\xE4r g\xE5ngen g\xE4ller det
+    hans anh\xE4ngare - de som kallar sig f\xF6r de upplysta. \n\nDet har n\xE4mligen
+    kommit till v\xE5r k\xE4nnedom att ot\xE4cka varelser setts till vid den gamla
+    fabriken utanf\xF6r staden. Samma fabrik som dessa sektmedlemmar ockupperade
+    i f\xF6rra m\xE5naden.\n\nD\xE4rf\xF6r beh\xF6ver jag be er om fullmakt att anlita
+    en monsterj\xE4gare f\xF6r att f\xE5 ett slut p\xE5 denna gudsf\xF6rg\xE4tna
+    sekt och deras demoniska upps\xE5t.\n\nTack p\xE5 f\xF6rhand och m\xE5 Gud bevara
+    oss alla.\n\t\t  - Kyrkoherde Gregorius    \n\n   \n\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
