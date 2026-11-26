@@ -16,7 +16,7 @@ public class ArrowController : MonoBehaviour
     {
         _input = _inputHandler.GetPlayerInput();
     }
-
+    //
     void FixedUpdate()
     {
         // vector2 to degrees                                                      matte sloppet
