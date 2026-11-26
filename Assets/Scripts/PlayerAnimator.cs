@@ -5,11 +5,15 @@ public class PlayerAnimator : MonoBehaviour
 {
 
     [SerializeField] Animator animator;
+    [SerializeField] SpriteRenderer render;
 
     [SerializeField] PlayerController player;
     //jag vill inte behöva coupla spelaren med andra objekt, kan man skicka med sådan data i unityevent?
 
-    Vector2 lastPlayerVelocity = Vector2.zero;
+    private void FlipSprite(bool direction) 
+    {
+        render.flipX = direction;
+    }
 
     void Start()
     {
@@ -76,9 +80,17 @@ public class PlayerAnimator : MonoBehaviour
 
     void Update()
     {
-       //transform.
+        //transform.
 
-       //sprite flipping
+        //sprite flipping
+        if(player.velocity.x < 0)
+        {
+            FlipSprite(true);
+        }
+        else
+        {
+             FlipSprite(false);
+        }
 
         animator.SetInteger("yspeed", (int)MathF.Round(player.velocity.y));
 

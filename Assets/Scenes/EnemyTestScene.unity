@@ -3847,6 +3847,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimator
   animator: {fileID: 1978256334}
+  render: {fileID: 1978256333}
   player: {fileID: 1874107263}
 --- !u!4 &2074975491 stripped
 Transform:
