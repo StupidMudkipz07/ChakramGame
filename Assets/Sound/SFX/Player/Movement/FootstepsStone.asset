@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1233149941 &-7430574099641049058
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: FootstepStone4_{-7430574099641049058}
+  m_AudioClip: {fileID: 8300000, guid: afb24fe54a0e6ea4ab3f881bfc5fae81, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &-5856480304028807195
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: FootstepStone3_{-5856480304028807195}
+  m_AudioClip: {fileID: 8300000, guid: 2a5427ca84cf0a448ab08556d3a11965, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &463485282347572534
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: FootstepStone1_{463485282347572534}
+  m_AudioClip: {fileID: 8300000, guid: 943c8b6c2da7635478f42bc7d595161e, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1307931743 &6418180475301049370
+AudioRandomContainer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: FootstepsStone
+  m_Volume: 0
+  m_Pitch: 0
+  m_AutomaticTriggerTime: 0
+  m_LoopCount: 1
+  m_VolumeRandomizationRange: {x: 0, y: 0}
+  m_PitchRandomizationRange: {x: 0, y: 0}
+  m_AutomaticTriggerTimeRandomizationRange: {x: 0, y: 0}
+  m_LoopCountRandomizationRange: {x: 0, y: 0}
+  m_Elements:
+  - {fileID: 463485282347572534}
+  - {fileID: 7871457637379000052}
+  - {fileID: -5856480304028807195}
+  - {fileID: -7430574099641049058}
+  - {fileID: 6809129453944371510}
+  m_AvoidRepeatingLast: 1
+  m_PlaybackMode: 2
+  m_TriggerMode: 0
+  m_AutomaticTriggerMode: 1
+  m_LoopMode: 2
+  m_VolumeRandomizationEnabled: 0
+  m_PitchRandomizationEnabled: 0
+  m_AutomaticTriggerTimeRandomizationEnabled: 0
+  m_LoopCountRandomizationEnabled: 0
+--- !u!1233149941 &6809129453944371510
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: FootstepStone5_{6809129453944371510}
+  m_AudioClip: {fileID: 8300000, guid: 46976e91ce6789e42bf0d046445166e5, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &7871457637379000052
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: FootstepStone2_{7871457637379000052}
+  m_AudioClip: {fileID: 8300000, guid: aeefeb1c0562c4b4da75bd194415ea6c, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
