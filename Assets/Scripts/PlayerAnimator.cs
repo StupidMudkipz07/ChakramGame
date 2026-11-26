@@ -20,11 +20,12 @@ public class PlayerAnimator : MonoBehaviour
         player.ContiniousCrouch.AddListener(OnPlayerCrouch);
         player.OnDash.AddListener(OnDash);
         player.OnEndDash.AddListener(OnEndDash);
-        player.OnGrabbingWall.AddListener(OnWallSlide);
-        player.OnWallJump.AddListener(OnWallJump);
+
+        player.OnLeavingWall.AddListener(OnWallLeave);
+
     }
 
-    void StartWalk()  
+    void StartWalk()
     {
         animator.SetBool("Walk", true);
         animator.SetBool("LookingUp", false);
@@ -67,18 +68,29 @@ public class PlayerAnimator : MonoBehaviour
         animator.SetBool("Dash", false);
     }
 
-    void OnWallSlide()
-    {
-        animator.SetBool("wallSlide", true);
-    }
 
-    void OnWallJump()
+    void OnWallLeave()
     {
         animator.SetBool("wallSlide", false);
     }
 
     void Update()
     {
-        animator.SetInteger("yspeed", (int)(MathF.Round(player.velocity.y)));
+       //transform.
+
+       //sprite flipping
+
+        animator.SetInteger("yspeed", (int)MathF.Round(player.velocity.y));
+
+        if (player.state == PlayerState.walled)
+        {
+            animator.SetBool("wallSlide", true);
+        }
+        else
+        {
+            animator.SetBool("wallSlide", false);
+        }
+
+
     }
 }

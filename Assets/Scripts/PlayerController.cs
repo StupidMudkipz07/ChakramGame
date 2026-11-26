@@ -3,6 +3,15 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
+public enum PlayerState
+{
+    grounded,
+    dashing,
+    airborne,
+    walled,
+    stunned
+}
+
 public class PlayerController : MonoBehaviour
 {
     [Header("Move")]
@@ -18,7 +27,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float jumpBufferInSeconds = 0.19f;
     [SerializeField] float hangTimeInSeconds = 0.05f;
     [SerializeField] float hangTimeGravity = -4;
-    [SerializeField] float roofSpeedSet = -1;
+    [SerializeField] float roofSpeedSet = -0;
     [SerializeField] float coyoteTime = 0.1f;
     [SerializeField] float terminalVelocity = 27f;
 
@@ -78,6 +87,27 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(DuringStun(stunTime));
     }
 
+    public PlayerState state
+    {
+        get
+        {
+            if (_groundCheck.IsTouching)
+            {
+                return PlayerState.grounded;
+            }
+
+            else if (_isWallSliding)
+            {
+                return PlayerState.walled;
+            }
+            else
+            {
+                return PlayerState.airborne;
+            }
+        }
+    }
+
+
     [Header("Player Events")]
     public UnityEvent OnJump;
     public UnityEvent OnWallJump;
@@ -86,6 +116,7 @@ public class PlayerController : MonoBehaviour
     public UnityEvent OnThrow;
     public UnityEvent OnTouchingGround;
     public UnityEvent OnGrabbingWall;
+    public UnityEvent OnLeavingWall;
     public UnityEvent OnBonkinghead;
     public UnityEvent OnStun;
     public UnityEvent OnEndStun;
@@ -103,6 +134,9 @@ public class PlayerController : MonoBehaviour
     {
         _leftWallCheck.OnTouching.AddListener(OnTouchingWall);
         _rightWallCheck.OnTouching.AddListener(OnTouchingWall);
+        _leftWallCheck.OnLeaving.AddListener(OnLeavingWall.Invoke);
+        _rightWallCheck.OnLeaving.AddListener(OnLeavingWall.Invoke);
+
         _groundCheck.OnTouching.AddListener(OnGroundTouch);
         _roofCheck.OnTouching.AddListener(OnTouchingRoof);
     }
@@ -377,7 +411,6 @@ public class PlayerController : MonoBehaviour
             velocity.y = wallSlideSpeed * Time.fixedDeltaTime * wallGrabSpeedDecreaseMultiplier;
 
             OnGrabbingWall.Invoke();
-            Debug.Log("touched wall and slowed down");
         }
     }
 

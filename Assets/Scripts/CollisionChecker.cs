@@ -7,6 +7,13 @@ public class CollisionChecker : MonoBehaviour
 
     [SerializeField] protected LayerMask targetLayer;
 
+    TagHandle collidingTag;
+
+    public TagHandle GetCollidingTag()
+    {
+        return collidingTag;
+    }
+
     protected bool IsTargetLayer(int layer)
     {
         // Bitwise check: is the object's layer part of the ground mask?5
@@ -19,6 +26,7 @@ public class CollisionChecker : MonoBehaviour
         if (IsTargetLayer(other.gameObject.layer))
         {
             IsTouching = true;
+            collidingTag = TagHandle.GetExistingTag(other.tag);
         }
     }
 
@@ -30,6 +38,4 @@ public class CollisionChecker : MonoBehaviour
             IsTouching = false;
         }
     }
-
-
 }
