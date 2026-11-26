@@ -24,7 +24,7 @@ public class PlayerAnimator : MonoBehaviour
         player.OnWallJump.AddListener(OnWallJump);
     }
 
-    void StartWalk()
+    void StartWalk()  
     {
         animator.SetBool("Walk", true);
         animator.SetBool("LookingUp", false);
@@ -79,6 +79,6 @@ public class PlayerAnimator : MonoBehaviour
 
     void Update()
     {
-        animator.SetInteger("yspeed", (int)player.velocity.y);
+        animator.SetInteger("yspeed", (int)(MathF.Round(player.velocity.y)));
     }
 }
