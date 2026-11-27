@@ -1457,6 +1457,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd293f4581e36f044ae4de72f7bf03a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArrowController
+  player: {fileID: 1874107263}
   _inputHandler: {fileID: 1874107262}
 --- !u!1 &1007589680
 GameObject:
@@ -3450,6 +3451,7 @@ MonoBehaviour:
   _rightWallCheck: {fileID: 431118987}
   _inputHandler: {fileID: 1874107262}
   chakram: {fileID: 679602293}
+  _facingDirection: {x: 0, y: 0}
   _input:
     Move: {x: 0, y: 0}
     AimDirection: {x: 0, y: 0}
