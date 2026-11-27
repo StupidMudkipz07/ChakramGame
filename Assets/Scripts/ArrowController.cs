@@ -8,8 +8,10 @@ public class ArrowController : MonoBehaviour
 {
     PlayerInput _input;
 
+
     [Header("References")]
 
+    [SerializeField] PlayerController player;
     [SerializeField] InputHandler _inputHandler;
 
     void Update()
@@ -21,6 +23,7 @@ public class ArrowController : MonoBehaviour
     {
         // vector2 to degrees                                                      matte sloppet
         float angle = Mathf.Atan2(_input.AimDirection.y, _input.AimDirection.x) * Mathf.Rad2Deg;
+        // float angle = Mathf.Atan2(player.FacingDirection.y, player.FacingDirection.x) * Mathf.Rad2Deg;
 
         // make the angle into quaternion
         var rotation = Quaternion.Euler(0, 0, angle);

@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -60,7 +62,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] ChakramController chakram;
 
     [Header("Debug stats")]
-    float _facingDirection;
+    [SerializeField] Vector2 _facingDirection;
     float _jumpBufferTime;
     float _hangTimer;
     bool _hasJumped;
@@ -91,7 +93,11 @@ public class PlayerController : MonoBehaviour
     {
         get
         {
-            if (_groundCheck.IsTouching)
+            if (_isDashing)
+            {
+                return PlayerState.dashing;
+            }
+            else if (_groundCheck.IsTouching)
             {
                 return PlayerState.grounded;
             }
@@ -105,8 +111,23 @@ public class PlayerController : MonoBehaviour
                 return PlayerState.airborne;
             }
         }
+        set
+        {
+            Debug.Log("cant change the player state outside the player class");
+        }
     }
 
+    public Vector2 FacingDirection
+    {
+        get
+        {
+            return _facingDirection;
+        }
+        set
+        {
+            Debug.Log("cant change facing direction outside the player class");
+        }
+    }
 
     [Header("Player Events")]
     public UnityEvent OnJump;
@@ -200,6 +221,7 @@ public class PlayerController : MonoBehaviour
         if (Math.Abs(_input.Move.x) > 0)
         {
             ContiniousWalk.Invoke();
+            _facingDirection = velocity.normalized;
         }
         else if (_input.Move.y > 0)
         {
@@ -223,6 +245,8 @@ public class PlayerController : MonoBehaviour
         velocity.x = Mathf.MoveTowards(velocity.x, _input.Move.x * aerialMoveSpeed, aerialAcceleration * Time.fixedDeltaTime);
         ContiniousWallSlide.Invoke();
 
+        _facingDirection = -GetWallDirection();
+
         WallSlideCheck();
 
         //if the player is moving up normal gravity is applied, otherwise apply wallgravity
@@ -237,13 +261,17 @@ public class PlayerController : MonoBehaviour
         //for all airborne states
         {
             velocity.x = Mathf.MoveTowards(velocity.x, _input.Move.x * aerialMoveSpeed, aerialAcceleration * Time.fixedDeltaTime);
-            WallSlideCheck();
+
+            // if (math.abs(_facingDirection.x) < 0)
+            //     _facingDirection = new(velocity.normalized.x, 0);
+            _facingDirection = velocity.normalized;
 
             //gör coyote time möjligt
             if (_coyoteTimer > 0)
             {
                 JumpCheck();
             }
+            WallSlideCheck();
         }
 
         //rising state
@@ -348,6 +376,8 @@ public class PlayerController : MonoBehaviour
         _hasJumped = false; //stänger av hangtime, kanske kan vara true
 
         OnDash.Invoke();
+
+        _facingDirection = velocity;
 
         yield return new WaitForSeconds(dashDuration);
 

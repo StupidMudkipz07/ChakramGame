@@ -1,4 +1,5 @@
 using System;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class PlayerAnimator : MonoBehaviour
@@ -10,7 +11,7 @@ public class PlayerAnimator : MonoBehaviour
     [SerializeField] PlayerController player;
     //jag vill inte behöva coupla spelaren med andra objekt, kan man skicka med sådan data i unityevent?
 
-    private void FlipSprite(bool direction) 
+    private void FlipSprite(bool direction)
     {
         render.flipX = direction;
     }
@@ -80,17 +81,28 @@ public class PlayerAnimator : MonoBehaviour
 
     void Update()
     {
-        //transform.
 
-        //sprite flipping
-        if(player.velocity.x < 0)
+
+        if (player.state == PlayerState.dashing)
         {
-            FlipSprite(true);
+            FlipSprite(false);
+            float angle = Mathf.Atan2(player.FacingDirection.y, player.FacingDirection.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0, 0, angle);
         }
         else
         {
-             FlipSprite(false);
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+            // sprite flipping
+            if (player.FacingDirection.x < 0)
+            {
+                FlipSprite(true);
+            }
+            else
+            {
+                FlipSprite(false);
+            }
         }
+
 
         animator.SetInteger("yspeed", (int)MathF.Round(player.velocity.y));
 
@@ -102,7 +114,5 @@ public class PlayerAnimator : MonoBehaviour
         {
             animator.SetBool("wallSlide", false);
         }
-
-
     }
 }
