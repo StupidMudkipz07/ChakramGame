@@ -2,15 +2,15 @@ using UnityEngine;
 
 public class PlayerAudioController : MonoBehaviour
 {
-    AudioSource audioSource;
+    AudioSource footStepAudioSource;
     void Start()
     {
-        audioSource = GetComponent<AudioSource>();
+        footStepAudioSource = GetComponent<AudioSource>();
     }
 
     public void PlayFootstepSound()
     {
-        audioSource.Play();
+        footStepAudioSource.Play();
     }
     void Update()
     {

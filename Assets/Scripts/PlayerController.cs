@@ -16,14 +16,12 @@ public enum PlayerState
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Move")]
-    [SerializeField] float groundedMoveSpeed = 10;
+    [Header("Move")] [SerializeField] float groundedMoveSpeed = 10;
     [SerializeField] float groundedAcceleration = 400;
     [SerializeField] float aerialMoveSpeed = 9;
     [SerializeField] float aerialAcceleration = 180;
 
-    [Header("Jump")]
-    [SerializeField] float gravity = 50;
+    [Header("Jump")] [SerializeField] float gravity = 50;
     [SerializeField] float jumpForce = 16;
     [SerializeField] float minimalJumpForce = 6;
     [SerializeField] float jumpBufferInSeconds = 0.19f;
@@ -33,24 +31,20 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float coyoteTime = 0.1f;
     [SerializeField] float terminalVelocity = 27f;
 
-    [Header("Dash")]
-    [SerializeField] float dashSpeed = 27;
+    [Header("Dash")] [SerializeField] float dashSpeed = 27;
     [SerializeField] float dashDuration = 0.2f;
     [SerializeField] float dashCooldown = 0.56f;
 
-    [Header("Wall")]
-    [SerializeField] float wallSlideSpeed = 20;
+    [Header("Wall")] [SerializeField] float wallSlideSpeed = 20;
     [SerializeField] float wallJumpHeight = 20;
     [SerializeField] float wallJumpSpeed = 50;
     [SerializeField] float wallGrabSpeedDecreaseMultiplier = 1;
 
     [SerializeField] Vector2 stunVelocity;
 
-    [Header("Chakram")]
-    [SerializeField] float ChakramThrowSpeed;
+    [Header("Chakram")] [SerializeField] float ChakramThrowSpeed;
 
-    [Header("References")]
-    [SerializeField]
+    [Header("References")] [SerializeField]
     Rigidbody2D _rb;
 
     [SerializeField] CollisionEvent _groundCheck;
@@ -62,6 +56,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] ChakramController chakram;
 
     [Header("Debug stats")]
+    
+    [SerializeField]  bool _availableDash = false;
+    
     [SerializeField] Vector2 _facingDirection;
     float _jumpBufferTime;
     float _hangTimer;
@@ -111,26 +108,16 @@ public class PlayerController : MonoBehaviour
                 return PlayerState.airborne;
             }
         }
-        set
-        {
-            Debug.Log("cant change the player state outside the player class");
-        }
+        set { Debug.Log("cant change the player state outside the player class"); }
     }
 
     public Vector2 FacingDirection
     {
-        get
-        {
-            return _facingDirection;
-        }
-        set
-        {
-            Debug.Log("cant change facing direction outside the player class");
-        }
+        get { return _facingDirection; }
+        set { Debug.Log("cant change facing direction outside the player class"); }
     }
 
-    [Header("Player Events")]
-    public UnityEvent OnJump;
+    [Header("Player Events")] public UnityEvent OnJump;
     public UnityEvent OnWallJump;
     public UnityEvent OnDash;
     public UnityEvent OnEndDash;
@@ -142,8 +129,7 @@ public class PlayerController : MonoBehaviour
     public UnityEvent OnStun;
     public UnityEvent OnEndStun;
 
-    [Header("Continious Events")]
-    public UnityEvent ContiniousWalk;
+    [Header("Continious Events")] public UnityEvent ContiniousWalk;
     public UnityEvent ContiniousIdle;
     public UnityEvent ContiniousLookUp;
     public UnityEvent ContiniousCrouch;
@@ -172,12 +158,10 @@ public class PlayerController : MonoBehaviour
             _jumpBufferTime = jumpBufferInSeconds;
         }
 
-        if (_input.DashPressed)
+        if (_input.DashPressed && _dashCooldown <= 0 && _availableDash)
         {
-            if (_dashCooldown <= 0)
-            {
-                StartCoroutine(Dash());
-            }
+            StartCoroutine(Dash());
+            _availableDash = false;
         }
 
         CheckThrow();
@@ -193,6 +177,7 @@ public class PlayerController : MonoBehaviour
         {
             StateCheck();
         }
+
         ChangeVelocity();
     }
 
@@ -202,8 +187,18 @@ public class PlayerController : MonoBehaviour
     {
         if (_input.Throw && chakram.IsConnectedToTarget)
         {
+            Vector2 direction;
             //Ska chakram kastet vara baserat på spelarens speed? 
-            chakram.Throw(_input.AimDirection.normalized * ChakramThrowSpeed);
+            if (_input.AimDirection == Vector2.zero)
+            {
+                direction = _facingDirection;
+            }
+            else
+            {
+                direction = _input.AimDirection.normalized;
+            }
+            
+            chakram.Throw(direction * ChakramThrowSpeed);
             OnThrow.Invoke();
         }
     }
@@ -214,10 +209,11 @@ public class PlayerController : MonoBehaviour
 
     void Grounded()
     {
-        velocity.x = Mathf.MoveTowards(velocity.x, _input.Move.x * groundedMoveSpeed, groundedAcceleration * Time.fixedDeltaTime);
+        velocity.x = Mathf.MoveTowards(velocity.x, _input.Move.x * groundedMoveSpeed,
+            groundedAcceleration * Time.fixedDeltaTime);
         velocity.y = 0;
         _coyoteTimer = coyoteTime;
-
+        
         if (Math.Abs(_input.Move.x) > 0)
         {
             ContiniousWalk.Invoke();
@@ -244,7 +240,6 @@ public class PlayerController : MonoBehaviour
         //Horiztonal velocity
         velocity.x = Mathf.MoveTowards(velocity.x, _input.Move.x * aerialMoveSpeed, aerialAcceleration * Time.fixedDeltaTime);
         ContiniousWallSlide.Invoke();
-
         _facingDirection = -GetWallDirection();
 
         WallSlideCheck();
@@ -260,17 +255,20 @@ public class PlayerController : MonoBehaviour
     {
         //for all airborne states
         {
-            velocity.x = Mathf.MoveTowards(velocity.x, _input.Move.x * aerialMoveSpeed, aerialAcceleration * Time.fixedDeltaTime);
+            velocity.x = Mathf.MoveTowards(velocity.x, _input.Move.x * aerialMoveSpeed,
+                aerialAcceleration * Time.fixedDeltaTime);
 
-            // if (math.abs(_facingDirection.x) < 0)
-            //     _facingDirection = new(velocity.normalized.x, 0);
-            _facingDirection = velocity.normalized;
+            if (Math.Abs(_input.Move.x) > 0)
+            {
+                _facingDirection = new(velocity.normalized.x, 0);
+            }
 
             //gör coyote time möjligt
             if (_coyoteTimer > 0)
             {
                 JumpCheck();
             }
+
             WallSlideCheck();
         }
 
@@ -285,7 +283,6 @@ public class PlayerController : MonoBehaviour
                 //cuts the hangtime so that the player starts falling immedieatly
                 _hasJumped = false;
             }
-
         }
         //falling state
         //the player is at the peak of its jump or is falling
@@ -309,8 +306,8 @@ public class PlayerController : MonoBehaviour
     void OnGroundTouch()
     {
         _hasJumped = false;
-
         OnTouchingGround.Invoke();
+        _availableDash = true;
     }
 
     void ExecuteJump()
@@ -377,7 +374,7 @@ public class PlayerController : MonoBehaviour
 
         OnDash.Invoke();
 
-        _facingDirection = velocity;
+        _facingDirection = velocity.normalized;
 
         yield return new WaitForSeconds(dashDuration);
 
@@ -441,6 +438,7 @@ public class PlayerController : MonoBehaviour
             velocity.y = wallSlideSpeed * Time.fixedDeltaTime * wallGrabSpeedDecreaseMultiplier;
 
             OnGrabbingWall.Invoke();
+            _availableDash = true;
         }
     }
 
