@@ -39,7 +39,7 @@ AudioRandomContainer:
   m_Name: FootstepsStone
   m_Volume: 0
   m_Pitch: 0
-  m_AutomaticTriggerTime: 0
+  m_AutomaticTriggerTime: 0.08
   m_LoopCount: 1
   m_VolumeRandomizationRange: {x: 0, y: 0}
   m_PitchRandomizationRange: {x: 0, y: 0}
@@ -53,9 +53,9 @@ AudioRandomContainer:
   - {fileID: 6809129453944371510}
   m_AvoidRepeatingLast: 1
   m_PlaybackMode: 2
-  m_TriggerMode: 0
+  m_TriggerMode: 1
   m_AutomaticTriggerMode: 1
-  m_LoopMode: 2
+  m_LoopMode: 0
   m_VolumeRandomizationEnabled: 0
   m_PitchRandomizationEnabled: 0
   m_AutomaticTriggerTimeRandomizationEnabled: 0
