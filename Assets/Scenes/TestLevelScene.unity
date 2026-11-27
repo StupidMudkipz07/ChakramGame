@@ -520,6 +520,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimator
   animator: {fileID: 284303602}
+  render: {fileID: 284303601}
   player: {fileID: 1938986536}
 --- !u!1 &344728886
 GameObject:
@@ -837,6 +838,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd293f4581e36f044ae4de72f7bf03a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArrowController
+  player: {fileID: 1938986536}
   _inputHandler: {fileID: 1938986535}
 --- !u!1 &761098060
 GameObject:
@@ -35623,6 +35625,7 @@ MonoBehaviour:
   _rightWallCheck: {fileID: 495345811}
   _inputHandler: {fileID: 1938986535}
   chakram: {fileID: 1039148559}
+  _facingDirection: {x: 0, y: 0}
   _input:
     Move: {x: 0, y: 0}
     AimDirection: {x: 0, y: 0}
@@ -35654,6 +35657,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnGrabbingWall:
+    m_PersistentCalls:
+      m_Calls: []
+  OnLeavingWall:
     m_PersistentCalls:
       m_Calls: []
   OnBonkinghead:
